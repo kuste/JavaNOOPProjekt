@@ -4,6 +4,13 @@ import javax.swing.SwingUtilities;
 
 import controllers.DbsController;
 
+/**
+ * @author Ivica Kustura
+ * @version 1.00
+ * @since august 2019
+ * 
+ *
+ */
 public class App {
 
 	private static DbsController dbsController;
@@ -26,8 +33,7 @@ public class App {
 			public void run() {
 				dbsController = new DbsController();
 				dbsController.getAllDataFromDb();
-			
-				
+
 			}
 		}).start();
 	}
