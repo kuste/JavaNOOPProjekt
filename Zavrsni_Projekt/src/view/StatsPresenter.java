@@ -3,21 +3,22 @@ package view;
 import javax.swing.JPanel;
 import javax.swing.JLabel;
 import java.awt.Font;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Vector;
 
 import javax.swing.SwingConstants;
 import javax.swing.border.EtchedBorder;
 import javax.swing.JTable;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
 import controllers.DataController;
-import models.User;
 
 import javax.swing.JScrollPane;
 
 public class StatsPresenter extends JPanel {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private JTable tableUserStats;
 	private JLabel lblTableTitle;
 	private JScrollPane scrollPane;
@@ -34,7 +35,7 @@ public class StatsPresenter extends JPanel {
 		add(lblTableTitle);
 
 		scrollPane = new JScrollPane();
-		scrollPane.setBounds(85, 89, 652, 210);
+		scrollPane.setBounds(85, 90, 600, 400);
 		add(scrollPane);
 
 		tableUserStats = new JTable();
@@ -46,11 +47,22 @@ public class StatsPresenter extends JPanel {
 		DefaultTableModel model = new DefaultTableModel(null,
 				new String[] { "User Name", "Date Registered", "Last Login", "Total Posts" });
 
-		model.addRow(new String[] { dataController.getUserList().get(0).getFisrtName(),
-				dataController.getUserList().get(0).getFisrtName(),
-				dataController.getUserList().get(0).getFisrtName(),
-				dataController.getUserList().get(0).getFisrtName()});
-		tableUserStats.setModel(model);
+		DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+		centerRenderer.setHorizontalAlignment(JLabel.CENTER);
+		for (int i = 0; i < dataController.getUserList().size(); i++) {
 
+			model.addRow(new String[] { dataController.getUserList().get(i).getFisrtName(),
+					dataController.getUserList().get(i).getFisrtName(),
+					dataController.getUserList().get(i).getFisrtName(),
+					dataController.getUserList().get(i).getFisrtName() });
+
+		}
+		tableUserStats.setModel(model);
+		for (int i = 0; i < tableUserStats.getColumnCount(); i++) {
+
+			tableUserStats.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
+		}
+		// tableUserStats.scrollPane.setPreferredSize(tableUserStats.getPreferredSize());
 	}
+
 }

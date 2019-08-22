@@ -15,12 +15,14 @@ import javax.swing.BorderFactory;
 import javax.swing.JButton;
 
 import controllers.DataController;
+import controllers.observable;
+import controllers.observer;
 import models.User;
 
 import javax.swing.JScrollPane;
 import java.awt.GridLayout;
 
-public class MainFrame extends JFrame {
+public class MainFrame extends JFrame implements observer {
 	/**
 	 * 
 	 */
@@ -36,6 +38,7 @@ public class MainFrame extends JFrame {
 	private JScrollPane scrollPane;
 	private UserPresenter userPresenter;
 	private StatsPresenter statsPresenter;
+	private List<User> userList;
 
 	public MainFrame() {
 		dataController = new DataController();
@@ -48,7 +51,7 @@ public class MainFrame extends JFrame {
 		mainPanel = new JPanel();
 		getContentPane().add(mainPanel, BorderLayout.CENTER);
 		mainPanel.setLayout(null);
- 
+
 		panelTop = new JPanel();
 		panelTop.setBackground(new Color(50, 155, 156));
 		panelTop.setBounds(0, 0, 1400, 60);
@@ -121,21 +124,18 @@ public class MainFrame extends JFrame {
 			}
 		});
 		btnGetUsers.addActionListener(new ActionListener() {
-
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				List<User> userList = dataController.getUserList();
+				userList = dataController.getUserList();
 				panelCenter.removeAll();
 				panelCenter.updateUI();
 				panelCenter.revalidate();
-
 				for (int i = 0; i < userList.size(); i++) {
 					userPresenter = new UserPresenter(panelCenter, scrollPane, userList.get(i).get_id(),
 							userList.get(i).getFisrtName(), userList.get(i).getLastName(), userList.get(i).getEmail());
+
 					panelCenter.add(userPresenter);
-
 				}
-
 			}
 		});
 
@@ -166,5 +166,27 @@ public class MainFrame extends JFrame {
 			Point currCoords = e.getLocationOnScreen();
 			frame.setLocation(currCoords.x - mouseDownCompCoords.x, currCoords.y - mouseDownCompCoords.y);
 		}
+	}
+
+	@Override
+	public void subscribe(observable o) {
+		o.add(this);
+	}
+
+	@Override
+	public void update(List<User> userList) {
+		System.out.println(userList.size());
+		panelCenter.removeAll();
+
+		for (int i = 0; i < userList.size(); i++) {
+			userPresenter = new UserPresenter(panelCenter, scrollPane, userList.get(i).get_id(),
+					userList.get(i).getFisrtName(), userList.get(i).getLastName(), userList.get(i).getEmail());
+
+			panelCenter.add(userPresenter);
+		}
+		panelCenter.updateUI();
+		panelCenter.revalidate();
+		panelCenter.repaint();
+
 	}
 }

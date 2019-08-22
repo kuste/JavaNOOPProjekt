@@ -20,7 +20,7 @@ import java.util.List;
 import javax.swing.border.EtchedBorder;
 
 import controllers.DataController;
-
+import controllers.DbsController;
 import models.Post;
 
 public class UserPresenter extends JPanel {
@@ -48,6 +48,7 @@ public class UserPresenter extends JPanel {
 	public UserPresenter(JPanel panelCenter, JScrollPane scrollPane, String _id, String userFistName,
 			String userLastName, String userEmail) {
 		super();
+		dataController = new DataController();
 		this.panelCenter = panelCenter;
 		this.scrollPane = scrollPane;
 		setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
@@ -165,21 +166,24 @@ public class UserPresenter extends JPanel {
 						"Delete Dialog", JOptionPane.YES_NO_OPTION);
 				// 0=yes, 1=no
 				System.out.println(input);
-
+				if (input == 0) {
+					panelCenter.remove(dataController.deleteUserFromDb(_id));
+				}
+				panelCenter.updateUI();
+				panelCenter.revalidate();
 			}
 		});
 		btnViewPosts.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				dataController = new DataController();
 				List<Post> userPostList = dataController.getUserPostList(_id);
 				System.out.println(userPostList.size());
 				if (userPostList.size() == 0) {
 					JOptionPane.showMessageDialog(null, "This user has no posts", "Info Message",
 							JOptionPane.INFORMATION_MESSAGE);
 				} else {
-					
+
 					panelCenter.removeAll();
 
 					for (int i = 0; i < userPostList.size(); i++) {

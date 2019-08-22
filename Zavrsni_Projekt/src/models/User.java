@@ -1,5 +1,6 @@
 package models;
 
+
 public class User {
 
 	private String _id;
@@ -42,7 +43,5 @@ public class User {
 		return "User [_id=" + _id + ", fisrtName=" + fisrtName + ", lastName=" + lastName + ", email=" + email
 				+ ", password=" + password + "]";
 	}
-	
-	
 
 }
