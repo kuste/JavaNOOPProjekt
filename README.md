@@ -1,6 +1,6 @@
 # JavaNOOPProjekt
 
-## Autor: ### Ivica Kustura
+## Autor: Ivica Kustura
 
 Za ovaj projekt napravio sam aplikaciju koja se povezuje na Mongo bazu od [web aplikacije](https://web-app-client.herokuapp.com/)
 te omogucuje uvid u korisnike, njihove postove te brisanje korisnika iz baze. Aplikacija ozvjezava podatke u stvarnom vremenu prilikom 
