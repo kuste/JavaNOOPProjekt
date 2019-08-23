@@ -2,6 +2,10 @@ package models;
 
 import java.util.Date;
 
+/**
+ * General Post class
+ */
+
 public class Post {
 
 	private String _id;

@@ -22,9 +22,14 @@ import models.User;
 import javax.swing.JScrollPane;
 import java.awt.GridLayout;
 
+/**
+ * @author Ivica Kustura
+ */
 public class MainFrame extends JFrame implements observer {
+
 	/**
-	 * 
+	 * Class that contains all visual elements of the application it implements
+	 * custom Observer patter for real time user updates {@link observer observable}
 	 */
 	private static final long serialVersionUID = 1L;
 	private JPanel mainPanel;
@@ -72,7 +77,7 @@ public class MainFrame extends JFrame implements observer {
 		btnShowStats.setBounds(60, 45, 130, 30);
 		panelLeft.add(btnShowStats);
 
-		btnGetUsers = new JButton("Get users");
+		btnGetUsers = new JButton("Show Users");
 		btnGetUsers.setBounds(60, 107, 130, 30);
 		panelLeft.add(btnGetUsers);
 
@@ -100,6 +105,11 @@ public class MainFrame extends JFrame implements observer {
 
 	}
 
+	/**
+	 * Method for adding action listeners to the components
+	 * 
+	 * 
+	 */
 	private void activateComp() {
 
 		btnClose.addActionListener(new ActionListener() {
@@ -145,7 +155,10 @@ public class MainFrame extends JFrame implements observer {
 		return panelCenter;
 	}
 
-	public static class FrameDragListener extends MouseAdapter {
+	/**
+	 * Inner class that allows dragging the application with mouse
+	 **/
+	private static class FrameDragListener extends MouseAdapter {
 
 		private final JFrame frame;
 		private Point mouseDownCompCoords = null;
@@ -172,6 +185,12 @@ public class MainFrame extends JFrame implements observer {
 	public void subscribe(observable o) {
 		o.add(this);
 	}
+
+	/**
+	 * Updates users on panelCenter
+	 * 
+	 * @param userList - List
+	 */
 
 	@Override
 	public void update(List<User> userList) {

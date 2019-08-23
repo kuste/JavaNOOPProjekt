@@ -3,28 +3,34 @@ package controllers;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.bson.BsonDocument;
-import org.bson.BsonString;
 
 import models.Post;
 import models.User;
+
+/**
+ * Local management of data
+ * 
+ */
 
 public class DataController implements observable {
 
 	private static List<User> userList = new ArrayList<User>();
 	private static List<Post> postList = new ArrayList<Post>();
 	private List<Post> userPostList = new ArrayList<Post>();
-	private Map<String, String> usrFields;
 	private DbsController dbsController;
 	private static ArrayList<observer> observers = new ArrayList<>();
 
 	public DataController() {
-		usrFields = new LinkedHashMap<String, String>();
 	}
+
+	/**
+	 * Adds Users to list and notifies observers to update
+	 * 
+	 * @param user {@link User}
+	 */
 
 	public void addUserToList(User user) {
 		DataController.userList.add(user);
@@ -32,11 +38,23 @@ public class DataController implements observable {
 
 	}
 
+	/**
+	 * Adds Posts to list and notifies observers to update
+	 * 
+	 * @param post {@link Post}
+	 */
 	public void addPostToList(Post post) {
 		DataController.postList.add(post);
 	}
 
-	public void updatePostChange(String postId, BsonDocument bsonDocument) throws ParseException {
+	/**
+	 * Updates the fields of Post when update from database occurs
+	 * 
+	 * @param postId       - String
+	 * @param bsonDocument - BsonDocument 
+	 * {@link BsonDocument Post}
+	 */
+	public void updatePostChange(String postId, BsonDocument bsonDocument) {
 
 		dbsController = new DbsController();
 		String id = postId;
@@ -121,12 +139,18 @@ public class DataController implements observable {
 		return userPostList;
 	}
 
+	/**
+	 * Updates the fields of User when update from database occurs
+	 * 
+	 * @param _id          - String
+	 * @param bsonDocument - BsonDocument {@link BsonDocument User}
+	 * @throws ClassNotFoundException - {@link ClassNotFoundException}i
+	 */
+
 	public void updateUserChange(String _id, BsonDocument bsonDocument) throws ClassNotFoundException {
 		dbsController = new DbsController();
 		String id = _id;
 		BsonDocument upVal = bsonDocument;
-		// System.out.println(id);
-		// int index = userList.indexOf(id);
 		User usr = null;
 		int index = 0;
 		for (User user : userList) {
@@ -137,24 +161,35 @@ public class DataController implements observable {
 		}
 		// System.out.println(usr.toString());
 
-		usrFields.put("firstName", usr.getFisrtName());
-		usrFields.put("lastName", usr.getLastName());
-		usrFields.put("email", usr.getEmail());
-		usrFields.put("password", usr.getPassword());
+		String firstName = usr.getFisrtName();
+		String lastName = usr.getLastName();
+		String email = usr.getEmail();
+		String password = usr.getPassword();
+		Date dateRegistered = usr.getDateRegistered();
 
-		upVal.forEach((k, v) -> {
-
-			// System.out.println(usrFields.get(k));
-			if (usrFields.get(k) != ((BsonString) v).getValue()) {
-				usrFields.put(k, ((BsonString) v).getValue());
+		for (String key : upVal.keySet()) {
+			switch (key) {
+			case "firstName":
+				firstName = upVal.getString("firstName").getValue();
+				break;
+			case "lastName":
+				lastName = upVal.getString("lastName").getValue();
+				break;
+			case "email":
+				email = upVal.getString("email").getValue();
+				break;
+			case "password":
+				password = upVal.getString("password").getValue();
+				break;
+			case "dateRegistered":
+				dateRegistered = new Date(upVal.getDateTime("dateRegistered").getValue());
+				break;
+			default:
+				throw new IllegalArgumentException("Unexpected value: " + key);
 			}
-			// System.out.println(usrFields.get(k));
-		});
+		}
 
-		User newUser = new User(usr.get_id(), usrFields.get("firstName"), usrFields.get("lastName"),
-				usrFields.get("email"), usrFields.get("password"));
-
-		System.out.println(newUser.toString());
+		User newUser = new User(usr.get_id(), firstName, lastName, email, password, dateRegistered);
 
 		userList.set(index, newUser);
 		notifyObs();

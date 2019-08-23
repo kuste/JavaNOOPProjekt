@@ -20,14 +20,15 @@ import java.util.List;
 import javax.swing.border.EtchedBorder;
 
 import controllers.DataController;
-import controllers.DbsController;
 import models.Post;
+import models.User;
 
+/**
+ * Class for visual representation of Users from database 
+ * {@link User}
+ */
 public class UserPresenter extends JPanel {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	private JButton btnViewPosts;
 	private JButton btnDeleteUser;

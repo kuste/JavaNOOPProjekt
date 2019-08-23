@@ -5,17 +5,24 @@ import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.border.EtchedBorder;
 
+import models.Post;
+
 import java.awt.Font;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
-import java.awt.event.ActionListener;
 
 import javax.swing.JScrollPane;
 
+/**
+ * Class for visual representation of User Posts from database 
+ * {@link Post}
+ */
 public class PostPresenter extends JPanel {
+
+	private static final long serialVersionUID = 1L;
 	private JLabel lbl_id;
 	private JLabel lblUserId;
 	private JLabel lblTitle;
@@ -83,8 +90,6 @@ public class PostPresenter extends JPanel {
 		this.textAreaWhatIsOffered.setText(this.postWhatIsOffered);
 		this.textFieldContactEmail.setText(this.postContactEmail);
 	}
-
-	
 
 	private void layoutComp() {
 		setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));

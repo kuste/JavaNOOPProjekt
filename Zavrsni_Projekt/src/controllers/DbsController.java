@@ -2,7 +2,6 @@ package controllers;
 
 import java.util.Date;
 
-import org.bson.BsonDocument;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 
@@ -16,6 +15,12 @@ import com.mongodb.client.model.changestream.ChangeStreamDocument;
 import models.Post;
 import models.User;
 
+/**
+ * Getting data from the Mongo database using mongo java driver
+ * {@link MongoClient MongoDatabase}
+ * 
+ */
+
 public class DbsController {
 
 	private String posts;
@@ -24,7 +29,6 @@ public class DbsController {
 	private DataController dataController;
 	private MongoClient mongoClient;
 	private MongoDatabase database;
-
 
 	public DbsController() {
 		this.URI = "mongodb+srv://kuste:pass123456@node-rest-api-7y9da.mongodb.net/test?retryWrites=true&w=majority";
@@ -36,6 +40,11 @@ public class DbsController {
 		getPostsFromDb();
 		getUsersFromDb();
 	}
+
+	/**
+	 * Connects to database and gets all posts
+	 * 
+	 */
 
 	private void getPostsFromDb() {
 		this.dataController = new DataController();
@@ -79,6 +88,10 @@ public class DbsController {
 
 	}
 
+	/**
+	 * Connects to database and gets all users
+	 * 
+	 */
 	private void getUsersFromDb() {
 		this.dataController = new DataController();
 		mongoClient = MongoClients.create(URI);
@@ -96,7 +109,8 @@ public class DbsController {
 				String lastName = doc.getString("lastName");
 				String email = doc.getString("email");
 				String password = doc.getString("password");
-				User user = new User(_id, firstName, lastName, email, password);
+				Date dateRegistered = doc.getDate("dateRegistered");
+				User user = new User(_id, firstName, lastName, email, password, dateRegistered);
 
 				this.dataController.addUserToList(user);
 
@@ -113,18 +127,20 @@ public class DbsController {
 
 	}
 
+	/**
+	 * Constantly listens for User updates in database
+	 * 
+	 */
 	public void watchForUserUpdates() {
 		this.dataController = new DataController();
 		mongoClient = MongoClients.create(URI);
 		database = mongoClient.getDatabase("test");
-		BsonDocument resumeToken = null;
 		MongoCollection<Document> userCollection = database.getCollection("users");
 		MongoCursor<ChangeStreamDocument<Document>> userRes = userCollection.watch().iterator();
 		try {
 			while (userRes.hasNext()) {
 				// System.out.println(res.next());
 				ChangeStreamDocument<Document> userDoc = userRes.next();
-				resumeToken = userDoc.getResumeToken();
 
 				switch (userDoc.getOperationType().getValue()) {
 				case "insert":
@@ -134,7 +150,8 @@ public class DbsController {
 					String lastName = userDoc.getFullDocument().getString("lastName");
 					String email = userDoc.getFullDocument().getString("email");
 					String password = userDoc.getFullDocument().getString("password");
-					User user = new User(_id, firstName, lastName, email, password);
+					Date dateRegistered = userDoc.getFullDocument().getDate("dateRegistered");
+					User user = new User(_id, firstName, lastName, email, password, dateRegistered);
 					this.dataController.addUserToList(user);
 					break;
 				case "delete":
@@ -159,6 +176,10 @@ public class DbsController {
 
 	}
 
+	/**
+	 * Constantly listens for Post updates in data base
+	 * 
+	 */
 	public void wathcForPostUpdates() {
 		this.dataController = new DataController();
 		mongoClient = MongoClients.create(URI);
@@ -209,6 +230,12 @@ public class DbsController {
 		}
 	}
 
+	/**
+	 * Gets all posts from given User in database
+	 * 
+	 * @param user_Id - String
+	 * 
+	 */
 	public void getAllUserPostsFromDb(String user_Id) {
 
 		// System.out.println("Getting data....");
@@ -252,6 +279,12 @@ public class DbsController {
 
 	}
 
+	/**
+	 * Removes given user from database
+	 * 
+	 * @param userId - String 
+	 */
+
 	public void deleteUser(String userId) {
 		MongoClient mongoClient = MongoClients.create(URI);
 		MongoDatabase database = mongoClient.getDatabase("test");
@@ -259,6 +292,11 @@ public class DbsController {
 		collection.deleteOne(new Document("_id", new ObjectId(userId)));
 	}
 
+	/**
+	 * Removes all posts from given User
+	 * 
+	 * @param  userId - String
+	 */
 	public void deleteAllUserPosts(String userId) {
 		MongoClient mongoClient = MongoClients.create(URI);
 		MongoDatabase database = mongoClient.getDatabase("test");
