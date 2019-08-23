@@ -3,21 +3,26 @@ package view;
 import javax.swing.JPanel;
 import javax.swing.JLabel;
 import java.awt.Font;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Vector;
 
 import javax.swing.SwingConstants;
 import javax.swing.border.EtchedBorder;
 import javax.swing.JTable;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
 import controllers.DataController;
+import models.Post;
 import models.User;
 
 import javax.swing.JScrollPane;
-
+/**
+ * Class for visual representation of User Stats from database 
+ * {@link User Posts}
+ */
 public class StatsPresenter extends JPanel {
+	
+	private static final long serialVersionUID = 1L;
 	private JTable tableUserStats;
 	private JLabel lblTableTitle;
 	private JScrollPane scrollPane;
@@ -34,7 +39,7 @@ public class StatsPresenter extends JPanel {
 		add(lblTableTitle);
 
 		scrollPane = new JScrollPane();
-		scrollPane.setBounds(85, 89, 652, 210);
+		scrollPane.setBounds(85, 90, 600, 400);
 		add(scrollPane);
 
 		tableUserStats = new JTable();
@@ -44,13 +49,37 @@ public class StatsPresenter extends JPanel {
 		dataController = new DataController();
 
 		DefaultTableModel model = new DefaultTableModel(null,
-				new String[] { "User Name", "Date Registered", "Last Login", "Total Posts" });
+				new String[] { "User Email", "Date Registered", "Total Posts" });
 
-		model.addRow(new String[] { dataController.getUserList().get(0).getFisrtName(),
-				dataController.getUserList().get(0).getFisrtName(),
-				dataController.getUserList().get(0).getFisrtName(),
-				dataController.getUserList().get(0).getFisrtName()});
+		DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+		centerRenderer.setHorizontalAlignment(JLabel.CENTER);
+		List<Post> userPostList = dataController.getPostList();
+		for (int i = 0; i < dataController.getUserList().size(); i++) {
+			int posts = searchList(dataController.getUserList().get(i).get_id(), userPostList);
+			model.addRow(new String[] { dataController.getUserList().get(i).getEmail(),
+					dataController.getUserList().get(i).getDateRegistered().toString(), String.valueOf(posts)
+
+			});
+
+		}
 		tableUserStats.setModel(model);
+		for (int i = 0; i < tableUserStats.getColumnCount(); i++) {
+
+			tableUserStats.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
+		}
+		// tableUserStats.scrollPane.setPreferredSize(tableUserStats.getPreferredSize());
+	}
+
+	private int searchList(String userId, List<Post> userPostList) {
+
+		int count = 0;
+		for (Post post : userPostList) {
+			if (post.getUser().matches(userId)) {
+				count++;
+			}
+		}
+
+		return count;
 
 	}
 }
