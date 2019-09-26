@@ -22,10 +22,18 @@ public class DataController implements observable {
 	private List<Post> userPostList = new ArrayList<Post>();
 	private DbsController dbsController;
 	private static ArrayList<observer> observers = new ArrayList<>();
-
+	
 	public DataController() {
 	}
 
+	
+	public void addNewUser(User user) {
+		this.dbsController = new DbsController();
+		dbsController.addUserToDb(user);
+		
+	}
+	
+	
 	/**
 	 * Adds Users to list and notifies observers to update
 	 * 

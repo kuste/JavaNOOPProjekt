@@ -43,7 +43,10 @@ public class MainFrame extends JFrame implements observer {
 	private JScrollPane scrollPane;
 	private UserPresenter userPresenter;
 	private StatsPresenter statsPresenter;
+	private AddUserPanel addUserPanel;
 	private List<User> userList;
+	private JButton buttonAddPost;
+	private JButton buttonAddNewUser;
 
 	public MainFrame() {
 		dataController = new DataController();
@@ -80,6 +83,14 @@ public class MainFrame extends JFrame implements observer {
 		btnGetUsers = new JButton("Show Users");
 		btnGetUsers.setBounds(60, 107, 130, 30);
 		panelLeft.add(btnGetUsers);
+		
+		buttonAddNewUser = new JButton("Add User");
+		buttonAddNewUser.setBounds(60, 167, 130, 30);
+		panelLeft.add(buttonAddNewUser);
+		
+		buttonAddPost = new JButton("Add Post");
+		buttonAddPost.setBounds(60, 225, 130, 30);
+		panelLeft.add(buttonAddPost);
 
 		scrollPane = new JScrollPane();
 		scrollPane.setBounds(250, 60, 1150, 660);
@@ -146,6 +157,17 @@ public class MainFrame extends JFrame implements observer {
 
 					panelCenter.add(userPresenter);
 				}
+			}
+		});
+		buttonAddNewUser.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				panelCenter.removeAll();
+				panelCenter.updateUI();
+				panelCenter.revalidate();
+				addUserPanel = new AddUserPanel();
+				panelCenter.add(addUserPanel);
 			}
 		});
 

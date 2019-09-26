@@ -39,8 +39,27 @@ public class DbsController {
 		System.out.println("Getting data....");
 		getPostsFromDb();
 		getUsersFromDb();
+		
 	}
 
+	/**
+	 * Adds new user to database
+	 * */
+	public void addUserToDb(User user) {
+		mongoClient = MongoClients.create(URI);
+		database = mongoClient.getDatabase("test");
+		System.out.println("Getting Posts...");
+		MongoCollection<Document> collection = database.getCollection("users");
+		Document doc = new Document()
+				.append("firstName", user.getFisrtName())
+				.append("lastName", user.getLastName())
+				.append("email", user.getEmail())
+				.append("password", user.getPassword())
+				.append("dateRegistered", user.getDateRegistered());
+				
+		collection.insertOne(doc);
+		
+	}
 	/**
 	 * Connects to database and gets all posts
 	 * 
