@@ -1,14 +1,19 @@
 package view;
 
 import javax.swing.JPanel;
+import javax.swing.JPasswordField;
+
 import java.awt.GridBagLayout;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.GridBagConstraints;
 import javax.swing.JTextField;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Date;
 
 import javax.swing.SwingConstants;
@@ -20,9 +25,11 @@ import controllers.DataController;
 import models.User;
 
 import javax.swing.JButton;
+import javax.swing.JComponent;
+
 import java.awt.Font;
 
-public class AddUserPanel extends JPanel {
+public class AddNewUserPanel extends JPanel {
 
 	/**
 	 * 
@@ -41,7 +48,7 @@ public class AddUserPanel extends JPanel {
 	private JLabel lblLastName;
 	private DataController dataController;
 
-	public AddUserPanel() {
+	public AddNewUserPanel() {
 		setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 		addConstraints();
 		activateComp();
@@ -53,22 +60,19 @@ public class AddUserPanel extends JPanel {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				dataController = new DataController();
-				
-				// napravti klasu za validaciju polja
-				if (textFieldPassword.getText().matches(textFieldRepeatPass.getText())) {
 
-					User user = new User(new ObjectId().toString(), 
-							textFieldFirstName.getText(),
-							textFieldLastName.getText(), 
-							textFieldEmail.getText(),
-							textFieldPassword.getText(),
-							new Date(System.currentTimeMillis()));
+				if (textFieldPassword.getText().matches(textFieldRepeatPass.getText())
+						&& !textFieldPassword.getText().isEmpty()) {
+					User user = new User(new ObjectId().toString().strip(), textFieldFirstName.getText().strip(),
+							textFieldLastName.getText().strip(), textFieldEmail.getText().strip(),
+							textFieldPassword.getText().strip(), new Date(System.currentTimeMillis()));
 					dataController.addNewUser(user);
+				} else {
+					JOptionPane.showInternalConfirmDialog(null, "Passwords must match!", "Error",
+							JOptionPane.PLAIN_MESSAGE, JOptionPane.QUESTION_MESSAGE);
 				}
-
 			}
 		});
-
 	}
 
 	private void addConstraints() {
@@ -120,7 +124,7 @@ public class AddUserPanel extends JPanel {
 		gbc_textFieldLastName.gridy = 3;
 		add(textFieldLastName, gbc_textFieldLastName);
 
-		lblEMail = new JLabel("E - Mail");
+		lblEMail = new JLabel("E-Mail");
 		lblEMail.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		GridBagConstraints gbc_lblEMail = new GridBagConstraints();
 		gbc_lblEMail.anchor = GridBagConstraints.SOUTH;
@@ -149,7 +153,7 @@ public class AddUserPanel extends JPanel {
 		gbc_lblPassword.gridy = 6;
 		add(lblPassword, gbc_lblPassword);
 
-		textFieldPassword = new JTextField();
+		textFieldPassword = new JPasswordField();
 		textFieldPassword.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		textFieldPassword.setHorizontalAlignment(SwingConstants.LEFT);
 		textFieldPassword.setColumns(25);
@@ -169,7 +173,7 @@ public class AddUserPanel extends JPanel {
 		gbc_lblRepeatPassword.gridy = 8;
 		add(lblRepeatPassword, gbc_lblRepeatPassword);
 
-		textFieldRepeatPass = new JTextField();
+		textFieldRepeatPass = new JPasswordField();
 		textFieldRepeatPass.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		textFieldRepeatPass.setHorizontalAlignment(SwingConstants.LEFT);
 		textFieldRepeatPass.setColumns(25);
@@ -190,4 +194,5 @@ public class AddUserPanel extends JPanel {
 		add(btnSubmit, gbc_btnSubmit);
 
 	}
+
 }

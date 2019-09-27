@@ -45,6 +45,7 @@ public class UserPresenter extends JPanel {
 	private DataController dataController;
 	private JPanel panelCenter;
 	private JScrollPane scrollPane;
+	private JButton btnNewPost;
 
 	public UserPresenter(JPanel panelCenter, JScrollPane scrollPane, String _id, String userFistName,
 			String userLastName, String userEmail) {
@@ -65,13 +66,12 @@ public class UserPresenter extends JPanel {
 
 	private void setConstraints() {
 		GridBagLayout gridBagLayout = new GridBagLayout();
-		gridBagLayout.columnWeights = new double[] { 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0 };
-		gridBagLayout.columnWidths = new int[] { 81, 115, 115, 115, 227, 108, 0 };
-		gridBagLayout.rowWeights = new double[] { 0.0, 0.0, 1.0 };
-		gridBagLayout.rowHeights = new int[] { 80, 75, 0 };
+		gridBagLayout.columnWeights = new double[] { 0.0, 1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0 };
+		gridBagLayout.columnWidths = new int[] { 100, 115, 115, 115, 175, 187, 45, 0 };
+		gridBagLayout.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 1.0 };
+		gridBagLayout.rowHeights = new int[] { 80, 35, 45, 0, 20 };
 		setLayout(gridBagLayout);
 		GridBagConstraints gbc_btnViewPosts = new GridBagConstraints();
-		gbc_btnViewPosts.anchor = GridBagConstraints.NORTH;
 		gbc_btnViewPosts.fill = GridBagConstraints.HORIZONTAL;
 		gbc_btnViewPosts.insets = new Insets(0, 0, 5, 5);
 		gbc_btnViewPosts.gridy = 1;
@@ -85,42 +85,51 @@ public class UserPresenter extends JPanel {
 		gbc_btnDeleteUser.gridx = 5;
 		add(btnDeleteUser, gbc_btnDeleteUser);
 		GridBagConstraints gbc_lblFirstLabel = new GridBagConstraints();
-		gbc_lblFirstLabel.anchor = GridBagConstraints.SOUTHWEST;
+		gbc_lblFirstLabel.anchor = GridBagConstraints.SOUTH;
 		gbc_lblFirstLabel.insets = new Insets(0, 0, 5, 5);
 		gbc_lblFirstLabel.gridy = 0;
 		gbc_lblFirstLabel.gridx = 1;
 		add(lblFirstLabel, gbc_lblFirstLabel);
 		GridBagConstraints gbc_lblLastName = new GridBagConstraints();
-		gbc_lblLastName.anchor = GridBagConstraints.SOUTHWEST;
+		gbc_lblLastName.anchor = GridBagConstraints.SOUTH;
 		gbc_lblLastName.gridx = 2;
 		gbc_lblLastName.gridy = 0;
 		gbc_lblLastName.insets = new Insets(0, 0, 5, 5);
 		add(lblLastName, gbc_lblLastName);
 		GridBagConstraints gbc_lblEmail = new GridBagConstraints();
-		gbc_lblEmail.anchor = GridBagConstraints.SOUTHWEST;
+		gbc_lblEmail.anchor = GridBagConstraints.SOUTH;
 		gbc_lblEmail.gridx = 3;
 		gbc_lblEmail.gridy = 0;
 		gbc_lblEmail.insets = new Insets(0, 0, 5, 5);
 		add(lblEmail, gbc_lblEmail);
 		GridBagConstraints gbc_lblUserFirstName = new GridBagConstraints();
-		gbc_lblUserFirstName.anchor = GridBagConstraints.NORTHWEST;
+		gbc_lblUserFirstName.anchor = GridBagConstraints.NORTH;
 		gbc_lblUserFirstName.insets = new Insets(0, 0, 5, 5);
 		gbc_lblUserFirstName.gridx = 1;
 		gbc_lblUserFirstName.gridy = 1;
 		add(lblUserFirstName, gbc_lblUserFirstName);
 		GridBagConstraints gbc_lblUserLastName = new GridBagConstraints();
 		gbc_lblUserLastName.anchor = GridBagConstraints.NORTH;
-		gbc_lblUserLastName.fill = GridBagConstraints.HORIZONTAL;
 		gbc_lblUserLastName.insets = new Insets(0, 0, 5, 5);
 		gbc_lblUserLastName.gridy = 1;
 		gbc_lblUserLastName.gridx = 2;
 		add(lblUserLastName, gbc_lblUserLastName);
 		GridBagConstraints gbc_lblUserEmail = new GridBagConstraints();
-		gbc_lblUserEmail.anchor = GridBagConstraints.NORTHWEST;
+		gbc_lblUserEmail.anchor = GridBagConstraints.NORTH;
 		gbc_lblUserEmail.insets = new Insets(0, 0, 5, 5);
 		gbc_lblUserEmail.gridy = 1;
 		gbc_lblUserEmail.gridx = 3;
 		add(lblUserEmail, gbc_lblUserEmail);
+		
+		btnNewPost = new JButton("New Post");
+		btnNewPost.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		GridBagConstraints gbc_btnNewPost = new GridBagConstraints();
+		gbc_btnNewPost.anchor = GridBagConstraints.NORTH;
+		gbc_btnNewPost.fill = GridBagConstraints.HORIZONTAL;
+		gbc_btnNewPost.insets = new Insets(0, 0, 5, 5);
+		gbc_btnNewPost.gridx = 5;
+		gbc_btnNewPost.gridy = 2;
+		add(btnNewPost, gbc_btnNewPost);
 	}
 
 	private void layoutComp() {
@@ -158,6 +167,18 @@ public class UserPresenter extends JPanel {
 
 	private void activateComp() {
 
+		btnNewPost.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				panelCenter.removeAll();
+				panelCenter.updateUI();
+				panelCenter.revalidate();
+				AddNewPostPanel post = new AddNewPostPanel(_id);
+				panelCenter.add(post);
+				
+			}
+		});
 		btnDeleteUser.addActionListener(new ActionListener() {
 
 			@Override

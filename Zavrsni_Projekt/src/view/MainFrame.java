@@ -43,9 +43,8 @@ public class MainFrame extends JFrame implements observer {
 	private JScrollPane scrollPane;
 	private UserPresenter userPresenter;
 	private StatsPresenter statsPresenter;
-	private AddUserPanel addUserPanel;
+	private AddNewUserPanel addUserPanel;
 	private List<User> userList;
-	private JButton buttonAddPost;
 	private JButton buttonAddNewUser;
 
 	public MainFrame() {
@@ -88,9 +87,6 @@ public class MainFrame extends JFrame implements observer {
 		buttonAddNewUser.setBounds(60, 167, 130, 30);
 		panelLeft.add(buttonAddNewUser);
 		
-		buttonAddPost = new JButton("Add Post");
-		buttonAddPost.setBounds(60, 225, 130, 30);
-		panelLeft.add(buttonAddPost);
 
 		scrollPane = new JScrollPane();
 		scrollPane.setBounds(250, 60, 1150, 660);
@@ -123,12 +119,12 @@ public class MainFrame extends JFrame implements observer {
 	 */
 	private void activateComp() {
 
+	
 		btnClose.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
 
-				System.out.println("....Closed....");
 				System.exit(0);
 			}
 		});
@@ -166,7 +162,7 @@ public class MainFrame extends JFrame implements observer {
 				panelCenter.removeAll();
 				panelCenter.updateUI();
 				panelCenter.revalidate();
-				addUserPanel = new AddUserPanel();
+				addUserPanel = new AddNewUserPanel();
 				panelCenter.add(addUserPanel);
 			}
 		});
