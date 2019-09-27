@@ -28,12 +28,13 @@ import javax.swing.JButton;
 import javax.swing.JComponent;
 
 import java.awt.Font;
-
+/**
+ * Class for adding new users {@link User
+ * Posts}
+ */
 public class AddNewUserPanel extends JPanel {
 
-	/**
-	 * 
-	 */
+	
 	private static final long serialVersionUID = 1L;
 	private JTextField textFieldFirstName;
 	private JLabel lblFirstName;

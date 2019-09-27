@@ -21,6 +21,7 @@ import javax.swing.border.EtchedBorder;
 import org.bson.types.ObjectId;
 
 import models.Post;
+import models.User;
 
 import javax.swing.JButton;
 import com.toedter.calendar.JCalendar;
@@ -29,7 +30,10 @@ import com.toedter.calendar.JDayChooser;
 import controllers.DataController;
 
 import javax.swing.border.TitledBorder;
-
+/**
+ * Class for adding new posts {@link User
+ * Posts}
+ */
 public class AddNewPostPanel extends JPanel {
 
 	private static final long serialVersionUID = 1L;
