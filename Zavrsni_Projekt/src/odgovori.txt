@@ -1,0 +1,2 @@
+U ovom projektu koristio sam Višenitno programiranje, Observer pattern, povezivanje s bazom
+dodao sam mogućnost dodavanja korisnika, novih postova i brizanja istih
