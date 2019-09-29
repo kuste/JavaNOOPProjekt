@@ -3,6 +3,7 @@ package controllers;
 import java.util.Date;
 
 import org.bson.Document;
+import org.bson.conversions.Bson;
 import org.bson.types.ObjectId;
 
 import com.mongodb.client.MongoClient;
@@ -39,6 +40,23 @@ public class DbsController {
 		System.out.println("Getting data....");
 		getPostsFromDb();
 		getUsersFromDb();
+
+	}
+
+	/**
+	 * Adds new user to database
+	 */
+	public void addUserToDb(User user) {
+		mongoClient = MongoClients.create(URI);
+		database = mongoClient.getDatabase("test");
+		System.out.println("Getting Posts...");
+		MongoCollection<Document> collection = database.getCollection("users");
+		Document doc = new Document().append("firstName", user.getFisrtName()).append("lastName", user.getLastName())
+				.append("email", user.getEmail()).append("password", user.getPassword())
+				.append("dateRegistered", user.getDateRegistered());
+
+		collection.insertOne(doc);
+
 	}
 
 	/**
@@ -282,7 +300,7 @@ public class DbsController {
 	/**
 	 * Removes given user from database
 	 * 
-	 * @param userId - String 
+	 * @param userId - String
 	 */
 
 	public void deleteUser(String userId) {
@@ -295,7 +313,7 @@ public class DbsController {
 	/**
 	 * Removes all posts from given User
 	 * 
-	 * @param  userId - String
+	 * @param userId - String
 	 */
 	public void deleteAllUserPosts(String userId) {
 		MongoClient mongoClient = MongoClients.create(URI);
@@ -328,6 +346,35 @@ public class DbsController {
 
 	public String getUsers() {
 		return users;
+	}
+
+	/*
+	 * create a post and add it to database
+	 */
+	public void addPostToDb(Post post) {
+		mongoClient = MongoClients.create(URI);
+		database = mongoClient.getDatabase("test");
+		System.out.println("Adding Post...");
+		MongoCollection<Document> collection = database.getCollection("posts");
+		Document doc = new Document().append("user", new ObjectId(post.getUser())).append("title", post.getTitle())
+				.append("descr", post.getDescr()).append("qualifications", post.getQualifications())
+				.append("payment", post.getPayment()).append("startDate", post.getStartDate())
+				.append("endDate", post.getEndDate()).append("additionalInfo", post.getAdditionalInfo())
+				.append("whatIsOffered", post.getWhatIsOffered()).append("contactEmail", post.getContactEmail());
+		collection.insertOne(doc);
+
+	}
+
+	public void deletePost(String post_id) {
+		mongoClient = MongoClients.create(URI);
+		database = mongoClient.getDatabase("test");
+		System.out.println("Deleting Post...");
+		MongoCollection<Document> collection = database.getCollection("posts");
+
+		Document doc = new Document().append("_id", new ObjectId(post_id));
+		collection.deleteOne(doc);
+		
+
 	}
 
 }

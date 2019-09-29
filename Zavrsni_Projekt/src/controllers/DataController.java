@@ -22,10 +22,32 @@ public class DataController implements observable {
 	private List<Post> userPostList = new ArrayList<Post>();
 	private DbsController dbsController;
 	private static ArrayList<observer> observers = new ArrayList<>();
-
+	
 	public DataController() {
 	}
 
+	
+	/**
+	 * Add new post from given user
+	 * @param post {@link Post}
+	 * */
+	public void addNewPost(Post post) {
+		
+		this.dbsController = new DbsController();
+		dbsController.addPostToDb(post);
+	}
+	
+	/**
+	 * Add new user to database
+	 * @param user {@link User}
+	 * */
+	public void addNewUser(User user) {
+		this.dbsController = new DbsController();
+		dbsController.addUserToDb(user);
+		
+	}
+	
+	
 	/**
 	 * Adds Users to list and notifies observers to update
 	 * 
@@ -196,6 +218,9 @@ public class DataController implements observable {
 
 	}
 
+	/*
+	 * Delete user from database
+	 * */
 	public int deleteUserFromDb(String userId) {
 		dbsController = new DbsController();
 		User usr = null;
@@ -213,6 +238,11 @@ public class DataController implements observable {
 		return index;
 	}
 
+	/**
+	 * 
+	 * Delete all posts from user
+	 * */
+	
 	private void deleteAllUserPosts(String userId) {
 
 		List<Post> newUserPostList = getUserPostList(userId);
@@ -254,5 +284,12 @@ public class DataController implements observable {
 		for (observer o : observers) {
 			o.update(userList);
 		}
+	}
+
+
+	public void deleteUserPost(String post_id) {
+		dbsController = new DbsController();
+		dbsController.deletePost(post_id);
+		notifyObs();
 	}
 }

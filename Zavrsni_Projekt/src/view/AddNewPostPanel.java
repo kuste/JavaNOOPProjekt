@@ -1,32 +1,42 @@
 package view;
 
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.SwingConstants;
-import javax.swing.border.EtchedBorder;
-
-import controllers.DataController;
-import models.Post;
-
 import java.awt.Font;
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
-import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.Date;
 
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JButton;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
+import javax.swing.border.EtchedBorder;
 
+import org.bson.types.ObjectId;
+
+import models.Post;
+import models.User;
+
+import javax.swing.JButton;
+import com.toedter.calendar.JCalendar;
+import com.toedter.calendar.JDayChooser;
+
+import controllers.DataController;
+
+import javax.swing.border.TitledBorder;
 /**
- * Class for visual representation of User Posts from database {@link Post}
+ * Class for adding new posts {@link User
+ * Posts}
  */
-public class PostPresenter extends JPanel {
+public class AddNewPostPanel extends JPanel {
 
 	private static final long serialVersionUID = 1L;
-	private JLabel lbl_id;
 	private JLabel lblUserId;
 	private JLabel lblTitle;
 	private JLabel lblDescr;
@@ -37,12 +47,9 @@ public class PostPresenter extends JPanel {
 	private JLabel lblAdditionalInfo;
 	private JLabel lblWhatIsOffered;
 	private JLabel lblContactEmail;
-	private JTextField textField_Id;
 	private JTextField textFieldUser;
 	private JTextField textFieldTitle;
 	private JTextField textFieldPayment;
-	private JTextField textFieldStartDate;
-	private JTextField textFieldEndDate;
 	private JTextField textFieldContactEmail;
 	private JTextArea textAreaDescription;
 	private JTextArea textAreaAdditionalInfo;
@@ -52,103 +59,47 @@ public class PostPresenter extends JPanel {
 	private JScrollPane scrollPane_1;
 	private JScrollPane scrollPane_2;
 	private JScrollPane scrollPane_3;
-	private String post_id;
-	private String postUserId;
-	private String postTitle;
-	private String postDescr;
-	private String postqualific;
-	private String postPayment;
-	private String postStartDate;
-	private String postEndDate;
-	private String postAdditionalInfo;
-	private String postWhatIsOffered;
-	private String postContactEmail;
-	private JButton btnDelete;
+	private JButton btnSubmit;
+	private JCalendar calendarStartDate;
+	private JCalendar calendaerEndDate;
+	private JPanel panel;
+	private JPanel panel_1;
 	private DataController dataController;
 
-	public PostPresenter(String post_id, String postUserId, String postTitle, String postDescr, String postqualific,
-			String postPayment, String postStartDate, String postEndDate, String postAdditionalInfo,
-			String postWhatIsOffered, String postContactEmail) {
-
-		this.post_id = post_id;
-		this.postUserId = postUserId;
-		this.postTitle = postTitle;
-		this.postDescr = postDescr;
-		this.postqualific = postqualific;
-		this.postPayment = postPayment;
-		this.postStartDate = postStartDate;
-		this.postEndDate = postEndDate;
-		this.postAdditionalInfo = postAdditionalInfo;
-		this.postWhatIsOffered = postWhatIsOffered;
-		this.postContactEmail = postContactEmail;
+	public AddNewPostPanel(String _id) {
 		layoutComp();
-
-		this.textField_Id.setText(this.post_id);
-		this.textFieldUser.setText(this.postUserId);
-		this.textFieldTitle.setText(this.postTitle);
-		this.textAreaDescription.setText(this.postDescr);
-		this.textAreaQualifications.setText(this.postqualific);
-		this.textFieldPayment.setText(this.postPayment);
-		this.textFieldStartDate.setText(this.postStartDate);
-		this.textFieldEndDate.setText(this.postEndDate);
-		this.textAreaAdditionalInfo.setText(this.postAdditionalInfo);
-		this.textAreaWhatIsOffered.setText(this.postWhatIsOffered);
-		this.textFieldContactEmail.setText(this.postContactEmail);
 		activateComp();
+		this.dataController = new DataController();
+		this.textFieldUser.setText(_id);
 	}
 
 	private void activateComp() {
-		btnDelete.addActionListener(new ActionListener() {
+		btnSubmit.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				dataController = new DataController();
-				dataController.deleteUserPost(post_id);
+
+				Post post = new Post(new ObjectId().toString(),
+						new ObjectId(textFieldUser.getText().toString()).toString(), textFieldTitle.getText().strip(),
+						textAreaDescription.getText().strip(), textAreaQualifications.getText().strip(),
+						textFieldPayment.getText().strip(), calendarStartDate.getDate(), calendaerEndDate.getDate(),
+						textAreaAdditionalInfo.getText().strip(), textAreaWhatIsOffered.getText().strip(),
+						textFieldContactEmail.getText().strip());
+				dataController.addNewPost(post);
 
 			}
 		});
-
 	}
 
 	private void layoutComp() {
 		setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 		GridBagLayout gridBagLayout = new GridBagLayout();
-		gridBagLayout.columnWidths = new int[] { 0, 152, 356, 35, 0 };
-		gridBagLayout.rowHeights = new int[] { 60, 68, 68, 68, 68, 68, 68, 68, 68, 68, 68, 68, 0 };
-		gridBagLayout.columnWeights = new double[] { 1.0, 0.0, 1.0, 0.0, Double.MIN_VALUE };
-		gridBagLayout.rowWeights = new double[] { 0.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0,
+		gridBagLayout.columnWidths = new int[] { 60, 152, 356, 75, 0 };
+		gridBagLayout.rowHeights = new int[] { 68, 68, 68, 68, 68, 68, 68, 68, 68, 68, 70, 0 };
+		gridBagLayout.columnWeights = new double[] { 0.0, 0.0, 1.0, 0.0, Double.MIN_VALUE };
+		gridBagLayout.rowWeights = new double[] { 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0,
 				Double.MIN_VALUE };
 		setLayout(gridBagLayout);
-
-		btnDelete = new JButton("Delete");
-		btnDelete.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		GridBagConstraints gbc_btnDelete = new GridBagConstraints();
-		gbc_btnDelete.anchor = GridBagConstraints.EAST;
-		gbc_btnDelete.insets = new Insets(0, 0, 5, 5);
-		gbc_btnDelete.gridx = 2;
-		gbc_btnDelete.gridy = 0;
-		add(btnDelete, gbc_btnDelete);
-
-		lbl_id = new JLabel("_Id");
-		lbl_id.setFont(new Font("Tahoma", Font.BOLD, 12));
-		lbl_id.setHorizontalAlignment(SwingConstants.LEFT);
-		GridBagConstraints gbc_lbl_id = new GridBagConstraints();
-		gbc_lbl_id.fill = GridBagConstraints.BOTH;
-		gbc_lbl_id.insets = new Insets(0, 0, 5, 5);
-		gbc_lbl_id.gridx = 1;
-		gbc_lbl_id.gridy = 1;
-		add(lbl_id, gbc_lbl_id);
-
-		textField_Id = new JTextField();
-		textField_Id.setEditable(false);
-		textField_Id.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		GridBagConstraints gbc_textField_Id = new GridBagConstraints();
-		gbc_textField_Id.anchor = GridBagConstraints.WEST;
-		gbc_textField_Id.insets = new Insets(0, 0, 5, 5);
-		gbc_textField_Id.gridx = 2;
-		gbc_textField_Id.gridy = 1;
-		add(textField_Id, gbc_textField_Id);
-		textField_Id.setColumns(35);
 
 		lblUserId = new JLabel("User");
 		lblUserId.setFont(new Font("Tahoma", Font.BOLD, 12));
@@ -158,19 +109,19 @@ public class PostPresenter extends JPanel {
 		gbc_lblUserId.fill = GridBagConstraints.VERTICAL;
 		gbc_lblUserId.insets = new Insets(0, 0, 5, 5);
 		gbc_lblUserId.gridx = 1;
-		gbc_lblUserId.gridy = 2;
+		gbc_lblUserId.gridy = 0;
 		add(lblUserId, gbc_lblUserId);
 
 		textFieldUser = new JTextField();
+		textFieldUser.setEditable(false);
 		textFieldUser.setHorizontalAlignment(SwingConstants.LEFT);
 		textFieldUser.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		textFieldUser.setEditable(false);
 		textFieldUser.setColumns(35);
 		GridBagConstraints gbc_textFieldUser = new GridBagConstraints();
 		gbc_textFieldUser.anchor = GridBagConstraints.WEST;
 		gbc_textFieldUser.insets = new Insets(0, 0, 5, 5);
 		gbc_textFieldUser.gridx = 2;
-		gbc_textFieldUser.gridy = 2;
+		gbc_textFieldUser.gridy = 0;
 		add(textFieldUser, gbc_textFieldUser);
 
 		lblTitle = new JLabel("Title");
@@ -181,19 +132,18 @@ public class PostPresenter extends JPanel {
 		gbc_lblTitle.fill = GridBagConstraints.VERTICAL;
 		gbc_lblTitle.insets = new Insets(0, 0, 5, 5);
 		gbc_lblTitle.gridx = 1;
-		gbc_lblTitle.gridy = 3;
+		gbc_lblTitle.gridy = 1;
 		add(lblTitle, gbc_lblTitle);
 
 		textFieldTitle = new JTextField();
 		textFieldTitle.setHorizontalAlignment(SwingConstants.LEFT);
 		textFieldTitle.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		textFieldTitle.setEditable(false);
 		textFieldTitle.setColumns(35);
 		GridBagConstraints gbc_textFieldTitle = new GridBagConstraints();
 		gbc_textFieldTitle.anchor = GridBagConstraints.WEST;
 		gbc_textFieldTitle.insets = new Insets(0, 0, 5, 5);
 		gbc_textFieldTitle.gridx = 2;
-		gbc_textFieldTitle.gridy = 3;
+		gbc_textFieldTitle.gridy = 1;
 		add(textFieldTitle, gbc_textFieldTitle);
 
 		lblDescr = new JLabel("Description");
@@ -203,7 +153,7 @@ public class PostPresenter extends JPanel {
 		gbc_lblDescr.fill = GridBagConstraints.BOTH;
 		gbc_lblDescr.insets = new Insets(0, 0, 5, 5);
 		gbc_lblDescr.gridx = 1;
-		gbc_lblDescr.gridy = 4;
+		gbc_lblDescr.gridy = 2;
 		add(lblDescr, gbc_lblDescr);
 
 		scrollPane = new JScrollPane();
@@ -212,7 +162,7 @@ public class PostPresenter extends JPanel {
 		gbc_scrollPane.fill = GridBagConstraints.VERTICAL;
 		gbc_scrollPane.insets = new Insets(0, 0, 5, 5);
 		gbc_scrollPane.gridx = 2;
-		gbc_scrollPane.gridy = 4;
+		gbc_scrollPane.gridy = 2;
 		add(scrollPane, gbc_scrollPane);
 
 		textAreaDescription = new JTextArea();
@@ -220,7 +170,6 @@ public class PostPresenter extends JPanel {
 		textAreaDescription.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		textAreaDescription.setRows(3);
 		textAreaDescription.setColumns(35);
-		textAreaDescription.setEditable(false);
 
 		lblqualific = new JLabel("Qualifications");
 		lblqualific.setFont(new Font("Tahoma", Font.BOLD, 12));
@@ -230,7 +179,7 @@ public class PostPresenter extends JPanel {
 		gbc_lblqualific.fill = GridBagConstraints.VERTICAL;
 		gbc_lblqualific.insets = new Insets(0, 0, 5, 5);
 		gbc_lblqualific.gridx = 1;
-		gbc_lblqualific.gridy = 5;
+		gbc_lblqualific.gridy = 3;
 		add(lblqualific, gbc_lblqualific);
 
 		scrollPane_1 = new JScrollPane();
@@ -239,14 +188,13 @@ public class PostPresenter extends JPanel {
 		gbc_scrollPane_1.fill = GridBagConstraints.VERTICAL;
 		gbc_scrollPane_1.insets = new Insets(0, 0, 5, 5);
 		gbc_scrollPane_1.gridx = 2;
-		gbc_scrollPane_1.gridy = 5;
+		gbc_scrollPane_1.gridy = 3;
 		add(scrollPane_1, gbc_scrollPane_1);
 
 		textAreaQualifications = new JTextArea();
 		scrollPane_1.setViewportView(textAreaQualifications);
 		textAreaQualifications.setRows(3);
 		textAreaQualifications.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		textAreaQualifications.setEditable(false);
 		textAreaQualifications.setColumns(35);
 
 		lblPayment = new JLabel("Payment");
@@ -257,19 +205,18 @@ public class PostPresenter extends JPanel {
 		gbc_lblPayment.fill = GridBagConstraints.VERTICAL;
 		gbc_lblPayment.insets = new Insets(0, 0, 5, 5);
 		gbc_lblPayment.gridx = 1;
-		gbc_lblPayment.gridy = 6;
+		gbc_lblPayment.gridy = 4;
 		add(lblPayment, gbc_lblPayment);
 
 		textFieldPayment = new JTextField();
 		textFieldPayment.setHorizontalAlignment(SwingConstants.LEFT);
 		textFieldPayment.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		textFieldPayment.setEditable(false);
 		textFieldPayment.setColumns(35);
 		GridBagConstraints gbc_textFieldPayment = new GridBagConstraints();
 		gbc_textFieldPayment.anchor = GridBagConstraints.WEST;
 		gbc_textFieldPayment.insets = new Insets(0, 0, 5, 5);
 		gbc_textFieldPayment.gridx = 2;
-		gbc_textFieldPayment.gridy = 6;
+		gbc_textFieldPayment.gridy = 4;
 		add(textFieldPayment, gbc_textFieldPayment);
 
 		lblStartDate = new JLabel("Start Date");
@@ -280,20 +227,30 @@ public class PostPresenter extends JPanel {
 		gbc_lblStartDate.fill = GridBagConstraints.VERTICAL;
 		gbc_lblStartDate.insets = new Insets(0, 0, 5, 5);
 		gbc_lblStartDate.gridx = 1;
-		gbc_lblStartDate.gridy = 7;
+		gbc_lblStartDate.gridy = 5;
 		add(lblStartDate, gbc_lblStartDate);
 
-		textFieldStartDate = new JTextField();
-		textFieldStartDate.setHorizontalAlignment(SwingConstants.LEFT);
-		textFieldStartDate.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		textFieldStartDate.setEditable(false);
-		textFieldStartDate.setColumns(35);
-		GridBagConstraints gbc_textFieldStartDate = new GridBagConstraints();
-		gbc_textFieldStartDate.anchor = GridBagConstraints.WEST;
-		gbc_textFieldStartDate.insets = new Insets(0, 0, 5, 5);
-		gbc_textFieldStartDate.gridx = 2;
-		gbc_textFieldStartDate.gridy = 7;
-		add(textFieldStartDate, gbc_textFieldStartDate);
+		panel = new JPanel();
+		panel.setBorder(new TitledBorder(null, null, TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		GridBagConstraints gbc_panel = new GridBagConstraints();
+		gbc_panel.fill = GridBagConstraints.BOTH;
+		gbc_panel.insets = new Insets(0, 0, 5, 5);
+		gbc_panel.gridx = 2;
+		gbc_panel.gridy = 5;
+		add(panel, gbc_panel);
+		GridBagLayout gbl_panel = new GridBagLayout();
+		gbl_panel.columnWidths = new int[] { 356, 0 };
+		gbl_panel.rowHeights = new int[] { 68, 0 };
+		gbl_panel.columnWeights = new double[] { 1.0, Double.MIN_VALUE };
+		gbl_panel.rowWeights = new double[] { 1.0, Double.MIN_VALUE };
+		panel.setLayout(gbl_panel);
+
+		calendarStartDate = new JCalendar();
+		GridBagConstraints gbc_calendarStartDate = new GridBagConstraints();
+		gbc_calendarStartDate.fill = GridBagConstraints.BOTH;
+		gbc_calendarStartDate.gridx = 0;
+		gbc_calendarStartDate.gridy = 0;
+		panel.add(calendarStartDate, gbc_calendarStartDate);
 
 		lblEndDate = new JLabel("End Date");
 		lblEndDate.setFont(new Font("Tahoma", Font.BOLD, 12));
@@ -303,20 +260,30 @@ public class PostPresenter extends JPanel {
 		gbc_lblEndDate.fill = GridBagConstraints.VERTICAL;
 		gbc_lblEndDate.insets = new Insets(0, 0, 5, 5);
 		gbc_lblEndDate.gridx = 1;
-		gbc_lblEndDate.gridy = 8;
+		gbc_lblEndDate.gridy = 6;
 		add(lblEndDate, gbc_lblEndDate);
 
-		textFieldEndDate = new JTextField();
-		textFieldEndDate.setHorizontalAlignment(SwingConstants.LEFT);
-		textFieldEndDate.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		textFieldEndDate.setEditable(false);
-		textFieldEndDate.setColumns(35);
-		GridBagConstraints gbc_textFieldEndDate = new GridBagConstraints();
-		gbc_textFieldEndDate.anchor = GridBagConstraints.WEST;
-		gbc_textFieldEndDate.insets = new Insets(0, 0, 5, 5);
-		gbc_textFieldEndDate.gridx = 2;
-		gbc_textFieldEndDate.gridy = 8;
-		add(textFieldEndDate, gbc_textFieldEndDate);
+		panel_1 = new JPanel();
+		panel_1.setBorder(new TitledBorder(null, null, TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		GridBagConstraints gbc_panel_1 = new GridBagConstraints();
+		gbc_panel_1.fill = GridBagConstraints.BOTH;
+		gbc_panel_1.insets = new Insets(0, 0, 5, 5);
+		gbc_panel_1.gridx = 2;
+		gbc_panel_1.gridy = 6;
+		add(panel_1, gbc_panel_1);
+		GridBagLayout gbl_panel_1 = new GridBagLayout();
+		gbl_panel_1.columnWidths = new int[] { 356, 0 };
+		gbl_panel_1.rowHeights = new int[] { 68, 0 };
+		gbl_panel_1.columnWeights = new double[] { 1.0, Double.MIN_VALUE };
+		gbl_panel_1.rowWeights = new double[] { 1.0, Double.MIN_VALUE };
+		panel_1.setLayout(gbl_panel_1);
+
+		calendaerEndDate = new JCalendar();
+		GridBagConstraints gbc_calendaerEndDate = new GridBagConstraints();
+		gbc_calendaerEndDate.fill = GridBagConstraints.BOTH;
+		gbc_calendaerEndDate.gridx = 0;
+		gbc_calendaerEndDate.gridy = 0;
+		panel_1.add(calendaerEndDate, gbc_calendaerEndDate);
 
 		lblAdditionalInfo = new JLabel("Additional Info");
 		lblAdditionalInfo.setFont(new Font("Tahoma", Font.BOLD, 12));
@@ -325,7 +292,7 @@ public class PostPresenter extends JPanel {
 		gbc_lblAdditionalInfo.fill = GridBagConstraints.BOTH;
 		gbc_lblAdditionalInfo.insets = new Insets(0, 0, 5, 5);
 		gbc_lblAdditionalInfo.gridx = 1;
-		gbc_lblAdditionalInfo.gridy = 9;
+		gbc_lblAdditionalInfo.gridy = 7;
 		add(lblAdditionalInfo, gbc_lblAdditionalInfo);
 
 		scrollPane_2 = new JScrollPane();
@@ -334,14 +301,13 @@ public class PostPresenter extends JPanel {
 		gbc_scrollPane_2.fill = GridBagConstraints.VERTICAL;
 		gbc_scrollPane_2.insets = new Insets(0, 0, 5, 5);
 		gbc_scrollPane_2.gridx = 2;
-		gbc_scrollPane_2.gridy = 9;
+		gbc_scrollPane_2.gridy = 7;
 		add(scrollPane_2, gbc_scrollPane_2);
 
 		textAreaAdditionalInfo = new JTextArea();
 		scrollPane_2.setViewportView(textAreaAdditionalInfo);
 		textAreaAdditionalInfo.setRows(3);
 		textAreaAdditionalInfo.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		textAreaAdditionalInfo.setEditable(false);
 		textAreaAdditionalInfo.setColumns(35);
 
 		lblWhatIsOffered = new JLabel("What Is Offered");
@@ -351,7 +317,7 @@ public class PostPresenter extends JPanel {
 		gbc_lblWhatIsOffered.fill = GridBagConstraints.BOTH;
 		gbc_lblWhatIsOffered.insets = new Insets(0, 0, 5, 5);
 		gbc_lblWhatIsOffered.gridx = 1;
-		gbc_lblWhatIsOffered.gridy = 10;
+		gbc_lblWhatIsOffered.gridy = 8;
 		add(lblWhatIsOffered, gbc_lblWhatIsOffered);
 
 		scrollPane_3 = new JScrollPane();
@@ -360,14 +326,13 @@ public class PostPresenter extends JPanel {
 		gbc_scrollPane_3.fill = GridBagConstraints.VERTICAL;
 		gbc_scrollPane_3.insets = new Insets(0, 0, 5, 5);
 		gbc_scrollPane_3.gridx = 2;
-		gbc_scrollPane_3.gridy = 10;
+		gbc_scrollPane_3.gridy = 8;
 		add(scrollPane_3, gbc_scrollPane_3);
 
 		textAreaWhatIsOffered = new JTextArea();
 		scrollPane_3.setViewportView(textAreaWhatIsOffered);
 		textAreaWhatIsOffered.setRows(3);
 		textAreaWhatIsOffered.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		textAreaWhatIsOffered.setEditable(false);
 		textAreaWhatIsOffered.setColumns(35);
 
 		lblContactEmail = new JLabel("Contact Email");
@@ -376,22 +341,28 @@ public class PostPresenter extends JPanel {
 		GridBagConstraints gbc_lblContactEmail = new GridBagConstraints();
 		gbc_lblContactEmail.anchor = GridBagConstraints.WEST;
 		gbc_lblContactEmail.fill = GridBagConstraints.VERTICAL;
-		gbc_lblContactEmail.insets = new Insets(0, 0, 0, 5);
+		gbc_lblContactEmail.insets = new Insets(0, 0, 5, 5);
 		gbc_lblContactEmail.gridx = 1;
-		gbc_lblContactEmail.gridy = 11;
+		gbc_lblContactEmail.gridy = 9;
 		add(lblContactEmail, gbc_lblContactEmail);
 
 		textFieldContactEmail = new JTextField();
 		textFieldContactEmail.setHorizontalAlignment(SwingConstants.LEFT);
 		textFieldContactEmail.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		textFieldContactEmail.setEditable(false);
 		textFieldContactEmail.setColumns(35);
 		GridBagConstraints gbc_textFieldContactEmail = new GridBagConstraints();
-		gbc_textFieldContactEmail.insets = new Insets(0, 0, 0, 5);
+		gbc_textFieldContactEmail.insets = new Insets(0, 0, 5, 5);
 		gbc_textFieldContactEmail.anchor = GridBagConstraints.WEST;
 		gbc_textFieldContactEmail.gridx = 2;
-		gbc_textFieldContactEmail.gridy = 11;
+		gbc_textFieldContactEmail.gridy = 9;
 		add(textFieldContactEmail, gbc_textFieldContactEmail);
-	}
 
+		btnSubmit = new JButton("Submit");
+		btnSubmit.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		GridBagConstraints gbc_btnSubmit = new GridBagConstraints();
+		gbc_btnSubmit.ipadx = 10;
+		gbc_btnSubmit.gridx = 2;
+		gbc_btnSubmit.gridy = 10;
+		add(btnSubmit, gbc_btnSubmit);
+	}
 }
